@@ -30,6 +30,7 @@ void setup() {
 }
 
 void draw() {
+  kwp = false;
   background(0);
 
   //Check to see if ate food
@@ -135,6 +136,7 @@ void keyPressed() {
     else if (key == a && direction != 2)
       direction = 4;
   }
+  kwp = true;
 }
 
 void crash() {
