@@ -2,6 +2,13 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+
+/*
+  At present, this game only works with 2 snakes.
+  Editing variables to have 3 snakes will have undefined
+  or unexpected behavior.
+*/
+
 ASnake[] snakes = new ASnake[2];
 int foodX, foodY;
 //int snakelength;
@@ -33,6 +40,7 @@ void draw() {
   
   for (int i = 0; i < snakes.length; i++) {
     ASnake s = snakes[i];
+    ASnake other = snakes[i ^ 1]; // Assumes 2 snakes
     s.keyPressedThisTurn = false;
     
     if (s.direction == 1) {
@@ -69,8 +77,7 @@ void draw() {
         s.y[j] = s.y[j - 1];
         ellipse(s.x[j], s.y[j], 5, 5);
         // Crash into snakes
-          ASnake other = snakes[i ^ 1];
-        if ((s.x[j] == s.x[0] && s.y[j] == s.y[0] && j > 2) || (s.x[j] == other.x[0] && other.y[j] == s.y[0]))
+        if (s.x[j] == s.x[0] && s.y[j] == s.y[0] && j > 2)
           crash();
       }
     }
@@ -88,6 +95,15 @@ void draw() {
     textSize(20);
     fill(s.c);
     text(s.score, 10 + 50 * i, 30);
+  }
+  
+  for (int i = 0; i < snakes.length; i++) {
+    ASnake s = snakes[i];
+    ASnake other = snakes[i ^ 1];  // Assumes 2 snakes
+    for (int j = s.len - 1; j > 0; j--) {
+      if (s.x[j] == other.x[0] && s.y[j] == other.y[0])
+        crash();
+    }
   }
   
   // Draw food
@@ -110,6 +126,7 @@ void keyPressed() {
   for (int i = 0; i < snakes.length; i++) {
     ASnake s = snakes[i];
     if (!s.keyPressedThisTurn) {
+      s.keyPressedThisTurn = true;
       if (key == s.up && s.direction != 3)
         s.direction = 1;
       else if (key == s.right && s.direction != 4)
@@ -118,6 +135,8 @@ void keyPressed() {
         s.direction = 3;
       else if (key == s.left && s.direction != 2)
         s.direction = 4;
+      else
+        s.keyPressedThisTurn = false;
     }
   }
 }
@@ -136,8 +155,8 @@ void reset() {
     s.xChange = 0;
     s.yChange = 0;
     s.direction = int(random(4));
-    s.x[0] = int(random(80)) * 5;
-    s.y[0] = int(random(80)) * 5;
+    s.x[0] = int(random(60) + 10) * 5;
+    s.y[0] = int(random(60) + 10) * 5;
     s.x[1] = s.x[0] - s.xChange;
     s.y[1] = s.y[0] - s.yChange;
     s.x[2] = s.x[1] - s.xChange;
