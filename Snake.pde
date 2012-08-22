@@ -68,7 +68,9 @@ void draw() {
         s.x[j] = s.x[j - 1];
         s.y[j] = s.y[j - 1];
         ellipse(s.x[j], s.y[j], 5, 5);
-        if (s.x[j] == s.x[0] && s.y[j] == s.y[0] && j > 2)
+        // Crash into snakes
+          ASnake other = snakes[i ^ 1];
+        if ((s.x[j] == s.x[0] && s.y[j] == s.y[0] && j > 2) || (s.x[j] == other.x[0] && other.y[j] == s.y[0]))
           crash();
       }
     }
